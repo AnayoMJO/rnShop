@@ -9,21 +9,18 @@ import {
 } from "react-native";
 import { Link, Stack } from "expo-router";
 import { format } from "date-fns";
-
 import { Tables } from "../../../types/database.types";
-//import { getMyOrders } from "../../../api/api";
-import { ORDERS } from "../../../../assets/orders";
-import { Order } from "../../../../assets/types/order";
+import { getMyOrders } from "../../../api/api";
 
-const renderItem: ListRenderItem<Order> = ({ item }) => (
+const renderItem: ListRenderItem<Tables<'order'>> = ({ item }) => (
   <Link href={`/order/${item.slug}`} asChild>
     <Pressable style={styles.orderContainer}>
       <View style={styles.orderContent}>
         <View style={styles.orderDetailsContainer}>
           <Text style={styles.orderItem}>{item.slug}</Text>
-          <Text style={styles.orderDetails}>{item.details}</Text>
+          <Text style={styles.orderDetails}>{item.description}</Text>
           <Text style={styles.orderDate}>
-            {format(new Date(item.date), "MMM dd, yyyy")}
+            {format(new Date(item.created_at), "MMM dd, yyyy")}
           </Text>
         </View>
         <View
@@ -37,13 +34,11 @@ const renderItem: ListRenderItem<Order> = ({ item }) => (
 );
 
 const Orders = () => {
-  // const { data: orders, error, isLoading } = getMyOrders();
+  const { data: orders, error, isLoading } = getMyOrders();
 
-  // if (isLoading) return <ActivityIndicator />;
+  if (isLoading) return <ActivityIndicator />;
 
-  // if (error || !orders) return <Text>Error: {error?.message}</Text>;
-
-  const orders = ORDERS;
+  if (error || !orders) return <Text>Error: {error?.message}</Text>;
 
   if (!orders.length)
     return (
@@ -62,7 +57,7 @@ const Orders = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Orders" }} />
-      <FlatList<Order>
+      <FlatList<Tables<'order'>>
         data={orders}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}

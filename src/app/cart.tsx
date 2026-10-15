@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import { useCartStore } from "../store/cart-store";
 import { StatusBar } from "expo-status-bar";
-//import { createOrder, createOrderItem } from "../api/api";
+import { createOrder, createOrderItem } from "../api/api";
 //import { openStripeCheckout, setupStripePaymentSheet } from "../lib/stripe";
 
 type CartItemType = {
   id: number;
   title: string;
-  heroImage: ImageSourcePropType;
+  heroImage: string;
   price: number;
   quantity: number;
   maxQuantity: number;
@@ -38,7 +38,7 @@ const CartItem = ({
 }: CartItemProps) => {
   return (
     <View style={styles.cartItem}>
-      <Image source={item.heroImage} style={styles.itemImage} />
+      <Image source={{ uri: item.heroImage }} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemTitle}>{item.title}</Text>
         <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
@@ -79,47 +79,48 @@ export default function Cart() {
     resetCart,
   } = useCartStore();
 
-  // const { mutateAsync: createSupabaseOrder } = createOrder();
-  // const { mutateAsync: createSupabaseOrderItem } = createOrderItem();
+  const { mutateAsync: createSupabaseOrder } = createOrder();
+  const { mutateAsync: createSupabaseOrderItem } = createOrderItem();
 
   const handleCheckout = async () => {
     const totalPrice = parseFloat(getTotalPrice());
 
-    try {
-      // await setupStripePaymentSheet(Math.floor(totalPrice * 100));
+    // try {
+    //   await setupStripePaymentSheet(Math.floor(totalPrice * 100));
 
-      // const result = await openStripeCheckout();
+    //   const result = await openStripeCheckout();
 
-      // if (!result) {
-      //   Alert.alert("An error occurred while processing the payment");
-      //   return;
-      // }
+    //   if (!result) {
+    //     Alert.alert("An error occurred while processing the payment");
+    //     return;
+    //   }
 
-      // await createSupabaseOrder(
-      //   { totalPrice },
-      //   {
-      //     onSuccess: (data) => {
-      //       createSupabaseOrderItem(
-      //         items.map((item) => ({
-      //           orderId: data.id,
-      //           productId: item.id,
-      //           quantity: item.quantity,
-      //         })),
-      //         {
-      //           onSuccess: () => {
-      //             alert("Order created successfully");
-      //             resetCart();
-      //           },
-      //         },
-      //       );
-      //     },
-      //   },
-      // );
-      console.log("Checkout process simulated. Total price:", totalPrice);
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred while creating the order");
-    }
+    //   await createSupabaseOrder(
+    //     { totalPrice },
+    //     {
+    //       onSuccess: (data) => {
+    //         createSupabaseOrderItem(
+    //           items.map((item) => ({
+    //             orderId: data.id,
+    //             productId: item.id,
+    //             quantity: item.quantity,
+    //           })),
+    //           {
+    //             onSuccess: () => {
+    //               alert("Order created successfully");
+    //               resetCart();
+    //             },
+    //           },
+    //         );
+    //       },
+    //     },
+    //   );
+    //   console.log("Checkout process simulated. Total price:", totalPrice);
+    // } catch (error) {
+    //   console.error(error);
+    //   alert("An error occurred while creating the order");
+    // }
+    console.log("order created successfully")
   };
 
   return (

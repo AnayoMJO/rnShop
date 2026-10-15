@@ -1,4 +1,3 @@
-import Auth from "@/app/auth";
 import { supabase } from "@/lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import {
@@ -27,33 +26,55 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-
-      if (session) {
+      try {
         const {
-          data: { user },
-          error,
-        } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        if (error) {
-          console.error("Error fetching user data:", error);
-        } else {
-          setUser(user);
+          data: { session },
+        } = await supabase.auth.getSession();
+        setSession(session);
+
+        if (session) {
+          const {
+            data: user,
+            error,
+          } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+          if (error) {
+            console.error("Error fetching user data:", error);
+          } else {
+            setUser(user);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching session:", error);
+      } finally {
         setMounting(false);
       }
     };
 
     fetchSession();
-    supabase.auth.onAuthStateChange((_event, session) => {
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+      if (session) {
+        const { data: user } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        setUser(user);
+      } else {
+        setUser(null);
+      }
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
@@ -64,3 +85,4 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 }
 
 export const useAuth = () => useContext(authContext);
+

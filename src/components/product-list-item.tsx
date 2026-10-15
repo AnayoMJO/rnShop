@@ -1,9 +1,16 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { Link } from "expo-router";
-import { Product } from "../../assets/types/product";
+import { Tables } from "@/types/database.types";
 
-export const ProductListItem = ({ product }: { product: Product }) => {
+export const ProductListItem = ({ product }: { product: Tables<"product"> }) => {
   return (
     <Link asChild href={`/product/${product.slug}`}>
       <Pressable style={styles.item}>
@@ -43,7 +50,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-  },
+    objectFit: "cover",
+  } as any,
   itemTextContainer: {
     padding: 8,
     alignItems: "flex-start",

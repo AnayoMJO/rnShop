@@ -10,9 +10,9 @@ import { useForm, Controller } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Redirect, Stack } from "expo-router";
-//import { supabase } from "../lib/supabase";
-//import { Toast } from "react-native-toast-notifications";
-//import { useAuth } from "../providers/auth-provider";
+import { Toast } from "react-native-toast-notifications";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../provider/auth-provider";
 
 const authSchema = zod.object({
   email: zod.string().email({ message: "Invalid email address" }),
@@ -22,9 +22,9 @@ const authSchema = zod.object({
 });
 
 export default function Auth() {
-  //const { session } = useAuth();
+  const { session } = useAuth();
 
-  // if (session) return <Redirect href="/" />;
+  if (session) return <Redirect href="/" />;
 
   const { control, handleSubmit, formState } = useForm({
     resolver: zodResolver(authSchema),
@@ -35,33 +35,32 @@ export default function Auth() {
   });
 
   const signIn = async (data: zod.infer<typeof authSchema>) => {
-    //const { error } = await supabase.auth.signInWithPassword(data);
+    const { error } = await supabase.auth.signInWithPassword(data);
 
-    // if (error) {
-    //   alert(error.message);
-    // } else {
-    //   Toast.show("Signed in successfully", {
-    //     type: "success",
-    //     placement: "top",
-    //     duration: 1500,
-    //   });
-    // }
-    console.log("Sign in clicked with data:", data);
+    if (error) {
+      alert(error.message);
+    } else {
+      Toast.show("Signed in successfully", {
+        type: "success",
+        placement: "top",
+        duration: 1500,
+      });
+    }
   };
 
   const signUp = async (data: zod.infer<typeof authSchema>) => {
-    console.log("Sign up clicked with data:", data);
-    // const { error } = await supabase.auth.signUp(data);
 
-    // if (error) {
-    //   alert(error.message);
-    // } else {
-    //   Toast.show("Signed up successfully", {
-    //     type: "success",
-    //     placement: "top",
-    //     duration: 1500,
-    //   });
-    // }
+    const { error } = await supabase.auth.signUp(data);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      Toast.show("Signed up successfully", {
+        type: "success",
+        placement: "top",
+        duration: 1500,
+      });
+    }
   };
 
   return (

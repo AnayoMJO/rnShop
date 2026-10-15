@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import { ImageSourcePropType } from 'react-native';
+//import { ImageSourcePropType } from 'react-native';
 
 type CartItemType = {
   id: number;
   title: string;
-  //heroImage: string;
-  heroImage: ImageSourcePropType;
+  heroImage: string;
+  //heroImage: ImageSourcePropType;
   price: number;
   quantity: number;
   maxQuantity: number;
@@ -33,9 +33,9 @@ export const useCartStore = create<CartState>((set, get) => ({
         items: state.items.map(i =>
           i.id === item.id
             ? {
-                ...i,
-                quantity: Math.min(i.quantity + item.quantity, i.maxQuantity),
-              }
+              ...i,
+              quantity: Math.min(i.quantity + item.quantity, i.maxQuantity),
+            }
             : i
         ),
       }));

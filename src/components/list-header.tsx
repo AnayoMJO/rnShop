@@ -11,15 +11,14 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 
 import { useCartStore } from "../store/cart-store";
-//import { supabase } from "../lib/supabase";
-import { Category } from "../../assets/types/category";
+import { supabase } from "../lib/supabase";
+import { Tables } from "@/types/database.types";
 
-export const ListHeader = ({ categories }: { categories: Category[] }) => {
+export const ListHeader = ({ categories }: { categories: Tables<"category">[] }) => {
   const { getItemCount } = useCartStore();
 
   const handleSignOut = async () => {
-    //await supabase.auth.signOut();
-    console.log("Sign out clicked");
+    await supabase.auth.signOut();
   };
 
   return (
@@ -28,7 +27,7 @@ export const ListHeader = ({ categories }: { categories: Category[] }) => {
         <View style={styles.headerLeft}>
           <View style={styles.avatarContainer}>
             <Image
-              source={{ uri: "https://via.placeholder.com/40" }}
+              source={{ uri: "https://placehold.co/100x100" }}
               style={styles.avatarImage}
             />
             <Text style={styles.avatarText}>Hello SoftSolved</Text>

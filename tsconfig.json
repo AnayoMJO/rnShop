@@ -4,8 +4,14 @@
     "strict": true,
     "jsx": "react-native",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/types/toast.d.ts" ]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "src/types/toast.d.ts"
+  ]
 }

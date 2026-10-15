@@ -12,16 +12,14 @@ import { useToast } from "react-native-toast-notifications";
 import { useState } from "react";
 
 import { useCartStore } from "../../store/cart-store";
-//import { getProduct } from "../../api/api";
-import { PRODUCTS } from "../../../assets/products";
+import { getProduct } from "../../api/api";
 import { ActivityIndicator } from "react-native";
 
 const ProductDetails = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const toast = useToast();
 
-  // const { data: product, error, isLoading } = getProduct(slug);
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  const { data: product, error, isLoading } = getProduct(slug);
 
   const { items, addItem, incrementItem, decrementItem } = useCartStore();
 
@@ -31,8 +29,8 @@ const ProductDetails = () => {
 
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  // if (isLoading) return <ActivityIndicator />;
-  // if (error) return <Text>Error: {error.message}</Text>;
+  if (isLoading) return <ActivityIndicator />;
+  if (error) return <Text>Error: {error.message}</Text>;
   if (!product) return <Redirect href="/404" />;
 
   const increaseQuantity = () => {
@@ -64,7 +62,7 @@ const ProductDetails = () => {
     addItem({
       id: product.id,
       title: product.title,
-      heroImage,
+      heroImage: product.heroImage,
       price: product.price,
       quantity,
       maxQuantity: product.maxQuantity,

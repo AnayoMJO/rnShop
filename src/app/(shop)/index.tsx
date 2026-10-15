@@ -6,39 +6,38 @@ import {
   Text,
 } from "react-native";
 
-import { PRODUCTS } from "../../../assets/products";
 import { ProductListItem } from "../../components/product-list-item";
 import { ListHeader } from "../../components/list-header";
 import { CATEGORIES } from "../../../assets/categories";
-//import { getProductsAndCategories } from "../../api/api";
+import { getProductsAndCategories } from "../../api/api";
 import Auth from "../auth";
 
 const Home = () => {
-  //const { data, error, isLoading } = getProductsAndCategories();
+  const { data, error, isLoading } = getProductsAndCategories();
 
-  // if (isLoading) return <ActivityIndicator />;
+  if (isLoading) return <ActivityIndicator />;
 
-  // if (error || !data)
-  // return <Text>Error {error?.message || "An error occured"}</Text>;
+  if (error || !data)
+    return <Text>Error {error?.message || "An error occured"}</Text>;
 
-  const categories = CATEGORIES;
-  categories.forEach((category) => {
-    category.products = PRODUCTS.filter(
-      (product) => product.category.slug === category.slug,
-    );
-  });
+  // const categories = CATEGORIES;
+  // categories.forEach((category) => {
+  //   category.products = PRODUCTS.filter(
+  //     (product) => product.category.slug === category.slug,
+  //   );
+  // });
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
-        data={PRODUCTS}
+        data={data.products}
         renderItem={({ item }) => <ProductListItem product={item} />}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
-        ListHeaderComponent={<ListHeader categories={categories} />}
+        ListHeaderComponent={<ListHeader categories={data.categories} />}
         contentContainerStyle={styles.flatListContent}
         columnWrapperStyle={styles.flatListColumn}
-        style={{ paddingHorizontal: 10, paddingVertical: 5 }}
+        style={{ flexGrow: 1, paddingHorizontal: 10, paddingVertical: 5 }}
       />
     </View>
   );

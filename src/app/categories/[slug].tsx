@@ -9,25 +9,19 @@ import {
 import { Redirect, Stack, useLocalSearchParams } from "expo-router";
 
 import { ProductListItem } from "../../components/product-list-item";
-//import { getCategoryAndProducts } from "../../api/api";
-import { CATEGORIES } from "../../../assets/categories";
+import { getCategoryAndProducts } from "../../api/api";
 
 const Category = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>();
 
-  const categories = CATEGORIES;
-  const category = categories.find((c) => c.slug === slug);
+  const { data, error, isLoading } = getCategoryAndProducts(slug);
 
-  if (!category) return <Redirect href="/404" />;
+  if (isLoading) return <ActivityIndicator />;
+  if (error || !data) return <Text>Error: {error?.message}</Text>;
 
-  // const { data, error, isLoading } = getCategoryAndProducts(slug);
+  if (!data.category || !data.products) return <Redirect href="/404" />;
 
-  // if (isLoading) return <ActivityIndicator />;
-  // if (error || !data) return <Text>Error: {error?.message}</Text>;
-
-  // if (!data.category || !data.products) return <Redirect href="/404" />;
-
-  // const { category, products } = data;
+  const { category, products } = data;
 
   return (
     <View style={styles.container}>
@@ -35,7 +29,7 @@ const Category = () => {
       <Image source={{ uri: category.imageUrl }} style={styles.categoryImage} />
       <Text style={styles.categoryName}>{category.name}</Text>
       <FlatList
-        data={category.products}
+        data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <ProductListItem product={item} />}
         numColumns={2}
